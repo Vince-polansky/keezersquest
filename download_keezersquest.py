@@ -76,6 +76,11 @@ def get_all_src_href_files():
 	for file in files_to_download:
 		get_file(file)
 
+def download_logo_images(images):
+	images_list = images[1:-1].split("\",\"")
+	for image in images_list:
+		get_file("/logo/" + image + ".png")
+
 # downloads all images reverenced in static/js/main*.js jason section
 # and some witch arent
 def get_images():
@@ -88,6 +93,11 @@ def get_images():
 	images_parsed_json = json.loads("[{\"name\":\"crtoverlay\",\"path\":\"/crtoverlay.png\"},{\"name\":\"draainujescherm\",\"path\":\"/objects/draainujescherm.png\"},{\"name\":\"progressbar\",\"path\":\"/progressbar.png\"},{\"name\":\"progressbar-fill\",\"path\":\"/progressbar-fill.png\"},{\"name\":\"logo-zml\",\"path\":\"/logo-zml.png\"},{\"name\":\"logo-vpro\",\"path\":\"/logo-vpro.png\"},{\"name\":\"logo-npo3\",\"path\":\"/logo-npo3.png\"}]")
 	for image in images_parsed_json:
 		get_file(image['path'])
+	images_start = main_js_content.find("var n=[\"")
+	images_start = main_js_content.find("[", images_start) + 1
+	images_end = main_js_content.find("]", images_start)
+	images_logo = main_js_content[images_start:images_end]
+	download_logo_images(images_logo)
 
 # downloads all audio files reverenced in static/js/main*.js
 def get_audio_file():
